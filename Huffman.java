@@ -79,13 +79,18 @@ public class Huffman {
             int codeLength = bytes[i + 1];
             int code = bytes[i + 2];
             String codeStr = Integer.toBinaryString(code);
+            if (codeStr.length() < 32)
+                codeStr = "0".repeat(32 - codeStr.length()) + codeStr;
             codeStr = codeStr.substring(codeStr.length() - codeLength);
             codes.put(codeStr, c);
         }
         StringBuilder restCodes = new StringBuilder();
         for (; i < bytes.length; i++) {
             // Get the binary representation of the byte (last 8 bits after converting to binary representation of int)
-            String byteStr = Integer.toBinaryString(bytes[i]).substring(24);
+            String byteStr = Integer.toBinaryString(bytes[i]);
+            if (byteStr.length() < 32)
+                byteStr = "0".repeat(32 - byteStr.length()) + byteStr;
+            byteStr = byteStr.substring(24);
             restCodes.append(byteStr);
         }
         StringBuilder result = new StringBuilder();
@@ -98,7 +103,6 @@ public class Huffman {
         }
         return result.toString();
     }
-
     private static void encode(HuffmanNode root, String s, String[] codes) {
         if (root == null) return;
         if (root.left == null && root.right == null) {
