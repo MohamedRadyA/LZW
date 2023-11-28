@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
+import java.io.IOException;
 
 public class MainFrame extends JFrame {
     public MainFrame() {
@@ -62,7 +63,7 @@ public class MainFrame extends JFrame {
             if (pathField.getText().isEmpty())
                 return;
             String path = fileChooser.getSelectedFile().getAbsolutePath();
-            Parser.writeToBinFile(path, Main.compressLZW(Parser.readFromTxtFile(pathField.getText())));
+            Parser.writeBytesToBinFile(path, Huffman.compressHuffman(Parser.readFromTxtFile(pathField.getText())));
             JOptionPane.showMessageDialog(inputPanel, "Compressed Successfully!");
         });
 
@@ -73,7 +74,11 @@ public class MainFrame extends JFrame {
             if (pathField.getText().isEmpty())
                 return;
             String path = fileChooser.getSelectedFile().getAbsolutePath();
-            Parser.writeToTxtFile(path, Main.decompressLZW(Parser.readFromBinFile(pathField.getText())));
+            try {
+                Parser.writeToTxtFile(path, Huffman.decode(Parser.readBytesFromBinFile(pathField.getText())));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             JOptionPane.showMessageDialog(inputPanel, "Decompressed Successfully!");
         });
 
