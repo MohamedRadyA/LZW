@@ -46,4 +46,21 @@ public class Parser {
         }
         return compressed;
     }
+
+    public static byte[] readBytesFromBinFile(String path) throws IOException {
+        byte[] bytes = Files.readAllBytes(Paths.get(path));
+        return bytes;
+    }
+
+    public static void writeBytesToBinFile(String path, byte[] result) {
+        File file = new File(path);
+
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            for (byte x : result)
+                fos.write(x);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
